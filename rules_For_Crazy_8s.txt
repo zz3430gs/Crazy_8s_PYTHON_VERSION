@@ -1,0 +1,9 @@
+-------------Basic Instructions For Crazy 8's-------------
+When playing cards from your hand.
+They must either match the suit, or the face value of the card on top of the discard pile.
+When you play an 8, it may be of any suit.  Upon playing it you must declare the new suit for the pile.
+The game continues until the deck of cards is exhausted or a player plays their last card.
+At that point your remaining hand(if any) are tallied up as follows;
+Ace: 1 Point, 2-7 and 9: face value of Points(2 for a 2 etc...),10-King: 10 Points, and an 8: 50 Points
+This game is scored similar to golf in that a lower score is how one wins.
+You will be able to type 'help' from your hand screen if you need to refresh your memory of these rules
