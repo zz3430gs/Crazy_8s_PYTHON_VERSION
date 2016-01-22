@@ -6,6 +6,7 @@ def main():
     discard_pile=[]
     list_of_players=[]
     end_game=False
+    play_again=True
 
     """THIS OPENS AND DISPLAYS THE INSTRUCTIONS FOR THE GAME"""
     def read_and_print_instructions():
@@ -171,51 +172,51 @@ def main():
     print(str(list_of_players[0])+' won the coin flip and will go first.')
 
     # Here is where the game runs
+    while play_again:
+        while end_game == False:
 
-    while end_game == False:
-
-        for player in list_of_players:
-            if player.name == 'Computer':
-                if len(deck.deck) == 0:
-                    end_game = True
-                player.take_computer_turn()
-                if len(player.hand) == 0:
-                    end_game = True
-            else:
-                if len(deck.deck) == 0:
-                    end_game = True
-                if len(player.hand) == 0:
-                    end_game = True
-                display_gameBoard()
-                turn_over = False
-                playable_suits = discard_pile[-1].suit
-                print(playable_suits)
-                player.display_hand()
-                print('Enter draw, or d to draw a card.  or h or help for the games instructions')
-                print('-----------------------------------')
-
-                while turn_over == False:
+            for player in list_of_players:
+                if player.name == 'Computer':
                     if len(deck.deck) == 0:
-                        break
-                    card_to_play=input('Which card do you want to play? It must be a '+discard_pile[-1].suit+'.')
-                    try:
-                        if card_to_play in 'draw':
-                            player.hand.append(deck.deal_a_card_to_player_hand())
-                            print('You drew a card.')
-                            turn_over = True
-                        elif card_to_play in 'help':
-                            read_and_print_instructions()
-                            turn_over = False
-                        else:
-                            player.play_card(card_to_play)
-                            turn_over = True
-                    except ValueError:
-                        print('Your response was not understood, please try again. '
-                              'Be more careful with spelling and capitalization')
-                        turn_over = False
+                        end_game = True
+                    player.take_computer_turn()
+                    if len(player.hand) == 0:
+                        end_game = True
+                else:
+                    if len(deck.deck) == 0:
+                        end_game = True
+                    if len(player.hand) == 0:
+                        end_game = True
+                    display_gameBoard()
+                    turn_over = False
+                    playable_suits = discard_pile[-1].suit
+                    print(playable_suits)
+                    player.display_hand()
+                    print('Enter draw, or d to draw a card.  or h or help for the games instructions')
+                    print('-----------------------------------')
 
-                if len(player.hand) == 0 or len(deck.deck) == 0:
-                    end_game = True
+                    while turn_over == False:
+                        if len(deck.deck) == 0:
+                            break
+                        card_to_play=input('Which card do you want to play? It must be a '+discard_pile[-1].suit+'.')
+                        try:
+                            if card_to_play in 'draw':
+                                player.hand.append(deck.deal_a_card_to_player_hand())
+                                print('You drew a card.')
+                                turn_over = True
+                            elif card_to_play in 'help':
+                                read_and_print_instructions()
+                                turn_over = False
+                            else:
+                                player.play_card(card_to_play)
+                                turn_over = True
+                        except ValueError:
+                            print('Your response was not understood, please try again. '
+                                  'Be more careful with spelling and capitalization')
+                            turn_over = False
+
+                    if len(player.hand) == 0 or len(deck.deck) == 0:
+                        end_game = True
 
 
     def determine_winner():
@@ -231,8 +232,12 @@ def main():
         for player in list_of_players:
             if player.score == low_score:
                 print('{} Has won the game with {} points!'.format, str(player.name), str(player.score))
-    determine_winner()
-
+        determine_winner()
+    y_or_n = input('Would you like to play another game? Type "yes" to play again or "no" to exit the game.')
+    if y_or_n.lower in 'yes':
+        play_again == True
+    elif y_or_n.lower in 'no':
+        play_again == False
 
 #
 # TODO: FINSISH CRETING THE WINNER CONDITIONS. BASED ON POINT VALUYE
