@@ -44,10 +44,11 @@ def main():
             for a_card in self.hand:
                 if a_card.face_or_number in deck_of_cards.dict_of_values:
                     point_value = deck_of_cards.dict_of_values.get(a_card.face_or_number)
-                    scored_this_game += point_value
-                    print(scored_this_game)
-            self.score == scored_this_game
-            return scored_this_game
+                    self.score += point_value
+
+            print(str(self.name_and_score()))
+            print('----------------------------------')
+            return self.score
 
         # This method selects the cards correctly
         def play_card(self, number_in_hand):
@@ -97,15 +98,17 @@ def main():
                 print(number_of_suits)
 
             def real_comp_turn():
-                self.display_hand
+                if len(player.hand) == 0 or len(deck.deck) == 0:
+                    pass
                 found_a_playable_card = True
                 highest_value_on_list = 0
                 entry_number_counter = 0
                 actual_slot_number = 0
                 i = 0
+
                 for a_card in self.hand:
                     if a_card.suit == discard_pile[-1].suit or a_card.face_or_number == discard_pile[-1].face_or_number:
-                        print('Computer player found a viable card')
+                        print('Computer player found a viable card in it\'s hand')
                         self.hand.pop(i)
                         discard_pile.append(a_card)
                         print('The Computer Played a '+str(a_card))
@@ -135,12 +138,10 @@ def main():
                     self.hand.append(deck.deal_a_card_to_player_hand())
 
             """THIS METHOD CALL RUNS THE COMP'S TURN"""
+
             real_comp_turn()
 
     """END PLAYER CLASS"""
-    # Initialize the deck
-    deck=deck_of_cards()
-    # display the game board
     def display_gameBoard():
 
         print('-----------------Crazy 8\'s-----------------\n'
@@ -148,6 +149,19 @@ def main():
               "\nCards in hand: "+str(len(list_of_players[0].hand))+"\t\tCards in hand: "+str(len(list_of_players[1].hand))+
               "\nDiscard Pile Shows: "+str(discard_pile[-1])+'\nCards left in the Deck: '+str(len(deck.deck))+'\n-------------------------------------------')
 
+    def determine_winner():
+            for playerForScore in list_of_players:
+
+                    score = playerForScore.add_up_points()
+                    playerForScore.score = score
+                    playerForScore.name_and_score()
+            low_score = 1500
+            for playerForScore in list_of_players:
+                if playerForScore.score <= low_score:
+                    low_score = playerForScore.score
+            for playerForScore in list_of_players:
+                if playerForScore.score == low_score:
+                    print('{} Has won the game with {} points!'.format( str(playerForScore.name), str(playerForScore.score)))
 
     # make players, computer and human
     player1 = player((input('Please enter your name.\n')))
@@ -160,38 +174,41 @@ def main():
     computer_Player = player('Computer')
     list_of_players.append(computer_Player)
     # determine who goes first
-    random.shuffle(list_of_players)
-    #deal card to discard pile
-    discard_pile.append(deck.deal_a_card_to_player_hand())
-    # deal the first hands out to the two players
-    for i in range(7):
-        for player in list_of_players:
-            player.hand.append(deck.deal_a_card_to_player_hand())
-    #         display game board for the first time
-    display_gameBoard()
-    print(str(list_of_players[0])+' won the coin flip and will go first.')
+    while play_again == True:
+        random.shuffle(list_of_players)
+        # Initialize the deck
+        deck = deck_of_cards()
+        #deal card to discard pile
+        discard_pile.append(deck.deal_a_card_to_player_hand())
+        # deal the first hands out to the two players
+        for i in range(7):
+            for player in list_of_players:
+                player.hand.append(deck.deal_a_card_to_player_hand())
+        #         display game board for the first time
+        display_gameBoard()
+        print(str(list_of_players[0])+' won the coin flip and will go first.')
 
     # Here is where the game runs
-    while play_again:
         while end_game == False:
 
-            for player in list_of_players:
-                if player.name == 'Computer':
-                    if len(deck.deck) == 0:
+            for a_player in list_of_players:
+                if a_player.name == 'Computer':
+                    if len(deck.deck) == 0 or len(a_player.hand) == 0:
                         end_game = True
-                    player.take_computer_turn()
-                    if len(player.hand) == 0:
-                        end_game = True
+                        pass
+                        break
+                    a_player.take_computer_turn()
+                    print('-----------------------------------')
                 else:
-                    if len(deck.deck) == 0:
+                    if len(deck.deck) == 0 or len(a_player.hand) == 0:
                         end_game = True
-                    if len(player.hand) == 0:
-                        end_game = True
+                        pass
+                        break
                     display_gameBoard()
                     turn_over = False
                     playable_suits = discard_pile[-1].suit
                     print(playable_suits)
-                    player.display_hand()
+                    a_player.display_hand()
                     print('Enter draw, or d to draw a card.  or h or help for the games instructions')
                     print('-----------------------------------')
 
@@ -201,44 +218,59 @@ def main():
                         card_to_play=input('Which card do you want to play? It must be a '+discard_pile[-1].suit+'.')
                         try:
                             if card_to_play in 'draw':
-                                player.hand.append(deck.deal_a_card_to_player_hand())
+                                a_player.hand.append(deck.deal_a_card_to_player_hand())
                                 print('You drew a card.')
                                 turn_over = True
+                                if len(deck.deck) == 0 or len(a_player.hand) == 0:
+                                    break
                             elif card_to_play in 'help':
                                 read_and_print_instructions()
                                 turn_over = False
                             else:
-                                player.play_card(card_to_play)
+                                a_player.play_card(card_to_play)
                                 turn_over = True
                         except ValueError:
                             print('Your response was not understood, please try again. '
                                   'Be more careful with spelling and capitalization')
                             turn_over = False
 
-                    if len(player.hand) == 0 or len(deck.deck) == 0:
-                        end_game = True
-
-
-    def determine_winner():
-        for player in list_of_players:
-                for a_card in player.hand:
-                    score = player.add_up_points()
-                    player.score = score
-                player.name_and_score()
-        low_score = 1500
-        for player in list_of_players:
-            if player.score <= low_score:
-                low_score = player.score
-        for player in list_of_players:
-            if player.score == low_score:
-                print('{} Has won the game with {} points!'.format, str(player.name), str(player.score))
+                    if len(a_player.hand) == 0 or len(deck.deck) == 0:
+                        end_game=True
+                        break
         determine_winner()
-    y_or_n = input('Would you like to play another game? Type "yes" to play again or "no" to exit the game.')
-    if y_or_n.lower in 'yes':
-        play_again == True
-    elif y_or_n.lower in 'no':
-        play_again == False
 
-#
-# TODO: FINSISH CRETING THE WINNER CONDITIONS. BASED ON POINT VALUYE
+
+        play_again_loop = True
+        while play_again_loop == True:
+
+            y_or_n = str(input('Would you like to play another game? Type "y" to play again or "n" to exit the game.'))
+            if y_or_n == 'y' or y_or_n == 'Y':
+
+                for a_player in list_of_players:
+                    a_player.hand.clear()
+                    print('That was the hand being deleted')
+                    a_player.score = 0
+                    print('That was the score being deleted.      {}'.format(a_player.score))
+                discard_pile.clear()
+                print(discard_pile)
+                print('Discard Piles...  uhhh... discarded...')
+                del deck.deck
+                play_again_loop = False
+                end_game = False
+                play_again = True
+                print('---------------------------------------------'
+                      '\nYOU HAVE SELECTED TO PLAY AGAIN, ENJOY'
+                      '\n---------------------------------------------')
+
+            elif y_or_n == 'n' or y_or_n == 'N':
+                play_again = False
+                play_again_loop = False
+                print('---------------------------------------------------'
+                      '\nYOU HAVE SELECTED TO EXIT THE GAME, HAVE A NICE DAY'
+                      '\n---------------------------------------------------')
+
+            else:
+                play_again_loop = True
+                print('Please select y or n only.')
+
 main()
