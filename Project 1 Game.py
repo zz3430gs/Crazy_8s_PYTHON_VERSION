@@ -130,11 +130,10 @@ def main():
 
                 for a_card in self.hand:
                     if a_card.suit == discard_pile[-1].suit or a_card.face_or_number == discard_pile[-1].face_or_number:
-                        print('Computer player found a viable card in it\'s hand')
                         self.hand.pop(i)
                         discard_pile.append(a_card)
                         print('The Computer Played a '+str(a_card))
-                        i = i+1
+                        i += 1
                         found_a_playable_card=True
                         if a_card.face_or_number == '8':
                             count_suits()
