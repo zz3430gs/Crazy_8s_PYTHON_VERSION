@@ -22,12 +22,15 @@ def main():
     """THIS IS A CLASS FOR THE PLAYERS"""
     class player:
         def __init__(self,name):
+            # Players only have these components when initialized
             self.hand=[]
             self.score=int(0)
             self.name=name
 
         def __repr__(self):
+            # nifty way of overriding the builtin object print method
             return str(self.name)
+        # Shortcut for displaying basic info at the end of the game
         def name_and_score(self):
             return self.name+'\'s score:'+str(self.score)
 
@@ -50,26 +53,42 @@ def main():
             print('----------------------------------')
             return self.score
 
-        # This method selects the cards correctly
+        # This method selects the cards correctly from the hand
         def play_card(self, number_in_hand):
 
             a_card = self.hand[int(number_in_hand)-1]
             # if its an 8 do these things then play it
             if str(a_card)[0] == '8':
                 # remove the old suit, replace with the new one
-                counter2 = 1
-                for suit in deck_of_cards.suits:
-                    print('-['+str(counter2)+']--> '+str(suit))
-                    counter2 = counter2+1
-                print('-----------------------------------')
-                suitChoice = int(input('Please select the new suit for the 8 you have played.'))
-                a_card.suit = deck_of_cards.suits[suitChoice-1]
-                self.hand.pop(int(number_in_hand)-1)
-                discard_pile.append(a_card)
+                # But which suit sir or madam?
+                eight_suit_menu_choice = True
+                while eight_suit_menu_choice == True:
+                    counter2 = 1
+                    print('------------Suits to choose from------------')
+                    # Nice display of suits
+                    for suit in deck_of_cards.suits:
+                        print('-['+str(counter2)+']--> '+str(suit))
+                        counter2 = counter2+1
+                    print('--------------------------------------------')
+                    # Make sure that they don't give strings
+                    try:
+                        suitChoice = int(input('Please select the new suit for the 8 you have played.'))
+                        # if it isn't an option, don't allow the choice to occur, re-loop.
+                        if (suitChoice-1) not in range(3):
+                            print('Sorry you must select a suit from the list provided.')
+                            eight_suit_menu_choice == True
+                        else:
+                            a_card.suit = deck_of_cards.suits[suitChoice-1]
+                            self.hand.pop(int(number_in_hand)-1)
+                            discard_pile.append(a_card)
+                            eight_suit_menu_choice = False
+                    except ValueError:
+                        print('Sorry you must select a suit from the list provided using the numbers 1, 2, 3 or 4.')
+                        eight_suit_menu_choice == True
 
             elif a_card.suit != discard_pile[-1].suit and a_card.face_or_number != discard_pile[-1].face_or_number:
                 print(a_card.suit)
-                print('You tried to play a card that was the wrong suit or the wrong face value. Try again.')
+                print('You tried to play a card that was the wrong suit and the wrong face value. Try again.')
             elif a_card.face_or_number == discard_pile[-1].face_or_number:
                 self.hand.pop(int(number_in_hand)-1)
                 discard_pile.append(a_card)
@@ -79,6 +98,9 @@ def main():
                 discard_pile.append(a_card)
                 print('You played a '+str(a_card)+'.')
     #        The following Methods are for the computer player only, and will only ever be called by it.
+    #        I hadn't done Python in almost 2 years and I barely remember extended class (for inheritence of attributes and such)
+    #        So Rather than creating an extended secondary class I wrote all the methods any player could ever have here
+    #        TODO Come back and make it sepearte classes once I've figured class extension out.
         def take_computer_turn(self):
 
             print('THE COMPUTER TAKES ITS TURN')
@@ -129,7 +151,7 @@ def main():
                                 a_card.suit = 'Clubs'
                             if actual_slot_number == 3:
                                 a_card.suit = 'Diamonds'
-
+                            print('Computer Player Chooses :{}'.format(str(a_player.suit)))
                         break
                     else:
                         found_a_playable_card = False
@@ -220,7 +242,7 @@ def main():
                     while turn_over == False:
                         if len(deck.deck) == 0:
                             break
-                        card_to_play=input('Which card do you want to play? It must be a '+discard_pile[-1].suit+'.')
+                        card_to_play=input('Which card do you want to play? It must be a '+discard_pile[-1].suit+' or an '+discard_pile[-1].face_or_number+'.')
                         try:
                             if card_to_play in 'draw':
                                 a_player.hand.append(deck.deal_a_card_to_player_hand())
@@ -243,39 +265,40 @@ def main():
                         end_game=True
                         break
         determine_winner()
+        play_again_method()
 
 
-        play_again_loop = True
-        while play_again_loop == True:
+        def play_again_method():
+            play_again_loop = True
+            while play_again_loop == True:
+                y_or_n = str(input('Would you like to play another game? Type "y" to play again or "n" to exit the game.'))
+                if y_or_n == 'y' or y_or_n == 'Y':
 
-            y_or_n = str(input('Would you like to play another game? Type "y" to play again or "n" to exit the game.'))
-            if y_or_n == 'y' or y_or_n == 'Y':
+                    for a_player in list_of_players:
+                        a_player.hand.clear()
+                        print('That was the hand being deleted')
+                        a_player.score = 0
+                        print('That was the score being deleted.      {}'.format(a_player.score))
+                    discard_pile.clear()
+                    print(discard_pile)
+                    print('Discard Piles...  uhhh... discarded...')
+                    del deck.deck
+                    play_again_loop = False
+                    end_game = False
+                    play_again = True
+                    print('---------------------------------------------'
+                          '\nYOU HAVE SELECTED TO PLAY AGAIN, ENJOY'
+                          '\n---------------------------------------------')
 
-                for a_player in list_of_players:
-                    a_player.hand.clear()
-                    print('That was the hand being deleted')
-                    a_player.score = 0
-                    print('That was the score being deleted.      {}'.format(a_player.score))
-                discard_pile.clear()
-                print(discard_pile)
-                print('Discard Piles...  uhhh... discarded...')
-                del deck.deck
-                play_again_loop = False
-                end_game = False
-                play_again = True
-                print('---------------------------------------------'
-                      '\nYOU HAVE SELECTED TO PLAY AGAIN, ENJOY'
-                      '\n---------------------------------------------')
+                elif y_or_n == 'n' or y_or_n == 'N':
+                    play_again = False
+                    play_again_loop = False
+                    print('---------------------------------------------------'
+                          '\nYOU HAVE SELECTED TO EXIT THE GAME, HAVE A NICE DAY'
+                          '\n---------------------------------------------------')
 
-            elif y_or_n == 'n' or y_or_n == 'N':
-                play_again = False
-                play_again_loop = False
-                print('---------------------------------------------------'
-                      '\nYOU HAVE SELECTED TO EXIT THE GAME, HAVE A NICE DAY'
-                      '\n---------------------------------------------------')
-
-            else:
-                play_again_loop = True
-                print('Please select y or n only.')
+                else:
+                    play_again_loop = True
+                    print('Please select y or n only.')
 
 main()
