@@ -150,6 +150,10 @@ def main():
               "\nDiscard Pile Shows: "+str(discard_pile[-1])+'\nCards left in the Deck: '+str(len(deck.deck))+'\n-------------------------------------------')
 
     def determine_winner():
+            print('---------------------------------'
+                  '\nThe End of the Game Has Happened!'
+                  '\nHands are being Tallied!'
+                  '\n---------------------------------')
             for playerForScore in list_of_players:
 
                     score = playerForScore.add_up_points()
@@ -162,6 +166,7 @@ def main():
             for playerForScore in list_of_players:
                 if playerForScore.score == low_score:
                     print('{} Has won the game with {} points!'.format( str(playerForScore.name), str(playerForScore.score)))
+                    print('-------------------------------------------------')
 
     # make players, computer and human
     player1 = player((input('Please enter your name.\n')))
