@@ -151,7 +151,7 @@ def main():
                                 a_card.suit = 'Clubs'
                             if actual_slot_number == 3:
                                 a_card.suit = 'Diamonds'
-                            print('Computer Player Chooses :{}'.format(str(a_player.suit)))
+                            print('Computer Player Chooses :{}'.format(str(a_card.suit)))
                         break
                     else:
                         found_a_playable_card = False
@@ -214,7 +214,7 @@ def main():
         #         display game board for the first time
         display_gameBoard()
         print(str(list_of_players[0])+' won the coin flip and will go first.')
-
+        end_game = False
     # Here is where the game runs
         while end_game == False:
 
@@ -265,9 +265,7 @@ def main():
                         end_game=True
                         break
         determine_winner()
-        play_again_method()
-
-
+        # This method contains the loop for the playing again or exiting the program
         def play_again_method():
             play_again_loop = True
             while play_again_loop == True:
@@ -284,14 +282,13 @@ def main():
                     print('Discard Piles...  uhhh... discarded...')
                     del deck.deck
                     play_again_loop = False
-                    end_game = False
-                    play_again = True
+                    main.play_again = True
                     print('---------------------------------------------'
                           '\nYOU HAVE SELECTED TO PLAY AGAIN, ENJOY'
                           '\n---------------------------------------------')
 
                 elif y_or_n == 'n' or y_or_n == 'N':
-                    play_again = False
+                    main.play_again = False
                     play_again_loop = False
                     print('---------------------------------------------------'
                           '\nYOU HAVE SELECTED TO EXIT THE GAME, HAVE A NICE DAY'
@@ -301,4 +298,5 @@ def main():
                     play_again_loop = True
                     print('Please select y or n only.')
 
+        play_again_method()
 main()
