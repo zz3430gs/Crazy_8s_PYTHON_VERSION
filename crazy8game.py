@@ -55,48 +55,54 @@ def main():
 
         # This method selects the cards correctly from the hand
         def play_card(self, number_in_hand):
+            invalid_play=True
+            while invalid_play:
+                a_card = self.hand[int(number_in_hand)-1]
+                # if its an 8 do these things then play it
+                if str(a_card)[0] == '8':
+                    # remove the old suit, replace with the new one
+                    # But which suit sir or madam?
+                    eight_suit_menu_choice = True
 
-            a_card = self.hand[int(number_in_hand)-1]
-            # if its an 8 do these things then play it
-            if str(a_card)[0] == '8':
-                # remove the old suit, replace with the new one
-                # But which suit sir or madam?
-                eight_suit_menu_choice = True
-                while eight_suit_menu_choice == True:
-                    counter2 = 1
-                    print('------------Suits to choose from------------')
-                    # Nice display of suits
-                    for suit in deck_of_cards.suits:
-                        print('-['+str(counter2)+']--> '+str(suit))
-                        counter2 = counter2+1
-                    print('--------------------------------------------')
-                    # Make sure that they don't give strings
-                    try:
-                        suitChoice = int(input('Please select the new suit for the 8 you have played.'))
-                        # if it isn't an option, don't allow the choice to occur, re-loop.
-                        if (suitChoice-1) not in range(3):
-                            print('Sorry you must select a suit from the list provided.')
+                    while eight_suit_menu_choice == True:
+                        counter2 = 1
+                        print('------------Suits to choose from------------')
+                        # Nice display of suits
+                        for suit in deck_of_cards.suits:
+                            print('-['+str(counter2)+']--> '+str(suit))
+                            counter2 = counter2+1
+                        print('--------------------------------------------')
+                        # Make sure that they don't give strings
+                        try:
+                            suitChoice = int(input('Please select the new suit for the 8 you have played.'))
+                            # if it isn't an option, don't allow the choice to occur, re-loop.
+                            if (suitChoice-1) not in range(3):
+                                print('Sorry you must select a suit from the list provided.')
+                                eight_suit_menu_choice == True
+                            else:
+                                a_card.suit = deck_of_cards.suits[suitChoice-1]
+                                self.hand.pop(int(number_in_hand)-1)
+                                discard_pile.append(a_card)
+                                eight_suit_menu_choice = False
+                                invalid_play=False
+                        except ValueError:
+                            print('Sorry you must select a suit from the list provided using the numbers 1, 2, 3 or 4.')
                             eight_suit_menu_choice == True
-                        else:
-                            a_card.suit = deck_of_cards.suits[suitChoice-1]
-                            self.hand.pop(int(number_in_hand)-1)
-                            discard_pile.append(a_card)
-                            eight_suit_menu_choice = False
-                    except ValueError:
-                        print('Sorry you must select a suit from the list provided using the numbers 1, 2, 3 or 4.')
-                        eight_suit_menu_choice == True
 
-            elif a_card.suit != discard_pile[-1].suit and a_card.face_or_number != discard_pile[-1].face_or_number:
-                print(a_card.suit)
-                print('You tried to play a card that was the wrong suit and the wrong face value. Try again.')
-            elif a_card.face_or_number == discard_pile[-1].face_or_number:
-                self.hand.pop(int(number_in_hand)-1)
-                discard_pile.append(a_card)
-                print('You played a '+str(a_card))
-            elif a_card.suit == discard_pile[-1].suit:
-                self.hand.pop(int(number_in_hand)-1)
-                discard_pile.append(a_card)
-                print('You played a '+str(a_card)+'.')
+                elif a_card.suit != discard_pile[-1].suit and a_card.face_or_number != discard_pile[-1].face_or_number:
+                    print(a_card.suit)
+                    print('You tried to play a card that was the wrong suit and the wrong face value. Try again.')
+                    invalid_play=True
+                elif a_card.face_or_number == discard_pile[-1].face_or_number:
+                    self.hand.pop(int(number_in_hand)-1)
+                    discard_pile.append(a_card)
+                    invalid_play=False
+                    print('You played a '+str(a_card))
+                elif a_card.suit == discard_pile[-1].suit:
+                    self.hand.pop(int(number_in_hand)-1)
+                    discard_pile.append(a_card)
+                    print('You played a '+str(a_card)+'.')
+                    invalid_play=False
     #        The following Methods are for the computer player only, and will only ever be called by it.
     #        I hadn't done Python in almost 2 years and I barely remember extended class (for inheritence of attributes and such)
     #        So Rather than creating an extended secondary class I wrote all the methods any player could ever have here
