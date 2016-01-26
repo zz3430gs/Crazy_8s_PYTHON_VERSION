@@ -101,7 +101,7 @@ def main():
     #        I hadn't done Python in almost 2 years and I barely remember extended class (for inheritence of attributes and such)
     #        So Rather than creating an extended secondary class I wrote all the methods any player could ever have here
     #        TODO Come back and make it sepearte classes once I've figured class extension out.
-        def take_computer_turn(self):
+        def computer_Turn_Phase_1(self):
 
             print('THE COMPUTER TAKES ITS TURN')
             # The order of the following list is :'Hearts','Spades','Clubs','Diamonds'
@@ -119,7 +119,7 @@ def main():
                         number_of_suits[3] += 1
                 print(number_of_suits)
 
-            def real_comp_turn():
+            def computer_Turn_Phase_2():
                 if len(player.hand) == 0 or len(deck.deck) == 0:
                     pass
                 found_a_playable_card = True
@@ -127,7 +127,7 @@ def main():
                 entry_number_counter = 0
                 actual_slot_number = 0
                 i = 0
-
+                # Check hand for viable cards to play, then play it
                 for a_card in self.hand:
                     if a_card.suit == discard_pile[-1].suit or a_card.face_or_number == discard_pile[-1].face_or_number:
                         self.hand.pop(i)
@@ -135,6 +135,7 @@ def main():
                         print('The Computer Played a '+str(a_card))
                         i += 1
                         found_a_playable_card=True
+                        # If it's an 8 make some hard choices...
                         if a_card.face_or_number == '8':
                             count_suits()
                             for entry in number_of_suits:
@@ -160,7 +161,7 @@ def main():
 
             """THIS METHOD CALL RUNS THE COMP'S TURN"""
 
-            real_comp_turn()
+            computer_Turn_Phase_2()
 
     """END PLAYER CLASS"""
     def display_gameBoard():
@@ -223,7 +224,7 @@ def main():
                         end_game = True
                         pass
                         break
-                    a_player.take_computer_turn()
+                    a_player.computer_Turn_Phase_1()
                     print('-----------------------------------')
                 else:
                     if len(deck.deck) == 0 or len(a_player.hand) == 0:
